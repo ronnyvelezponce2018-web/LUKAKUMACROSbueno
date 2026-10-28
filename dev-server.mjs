@@ -9,7 +9,7 @@
 // Usage: node dev-server.mjs   (PORT env var optional, default 3000)
 import { createServer } from 'node:http';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { extname, join } from 'node:path';
+import { extname, join, resolve, sep } from 'node:path';
 
 const ROOT = process.cwd();
 const PORT = Number(process.env.PORT || 3000);
@@ -92,7 +92,14 @@ const server = createServer((req, res) => {
   }
 
   const rel = resolvePath(req.url || '/');
-  const file = join(ROOT, rel);
+  const file = resolve(ROOT, rel);
+
+  // Only ever serve files inside the project directory.
+  if (file !== ROOT && !file.startsWith(ROOT + sep)) {
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('404 Not Found\n');
+    return;
+  }
 
   let body;
   try {
