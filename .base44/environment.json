@@ -1,0 +1,7 @@
+{
+  "previewPort": 3000,
+  "healthPath": "/",
+  "startCommand": "docker compose -f docker-compose.base44.yml up -d",
+  "notes": "Single static index.html served by dev-server.mjs from a bind mount. No backend, no database, no secrets required to boot.",
+  "secrets": []
+}
